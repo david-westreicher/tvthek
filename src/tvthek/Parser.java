@@ -21,11 +21,7 @@ public class Parser {
 		this.site = site2;
 	}
 
-	public static void main(String[] args) {
-		new Parser(args[0]).parse();
-	}
-
-	private void parse() {
+	public VideoInformation parse() {
 		try {
 			URL url = new URL(site);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // Cast
@@ -64,8 +60,10 @@ public class Parser {
 					json = json.replaceAll("&amp;", "&");
 					json = json.replaceAll("\\\\/", "/");
 					// System.out.println(json);
-					System.out.println(new Gson().fromJson(json,
-							VideoInformation.class));
+					VideoInformation vi = new Gson().fromJson(json,
+							VideoInformation.class);
+					System.out.println(vi);
+					return vi;
 				}
 			in.close();
 		} catch (MalformedURLException e) {
@@ -73,7 +71,7 @@ public class Parser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		return null;
 	}
 
 	public class VideoInformation {
@@ -102,10 +100,7 @@ public class Parser {
 		public String toString() {
 			String ret = "";
 			for (Source s : sources)
-				if (s.quality_string.equals("hoch")
-						&& s.protocol.equals("http")
-						&& (s.delivery.equals("progressive") || s.delivery
-								.equals("hls")))
+				if (s.isValid())
 					ret += s.toString() + "\n";
 			return title + "\n" + ret + "\n";
 		}
@@ -119,6 +114,13 @@ public class Parser {
 		public String quality_string;
 		public String src;
 		public String protocol;
+
+		public boolean isValid() {
+			return quality_string.equals("hoch")
+					&& protocol.equals("http")
+					&& (delivery.equals("progressive") || delivery
+							.equals("hls"));
+		}
 
 		@Override
 		public String toString() {

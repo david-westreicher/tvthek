@@ -1,0 +1,16 @@
+<Window title="tvthek parser" maximized="true"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns="org.apache.pivot.wtk">
+	<BoxPane orientation="VERTICAL">
+		<BoxPane orientation="HORIZONTAL">
+			<TextInput bxml:id="url" />
+			<PushButton bxml:id="pushButton" buttonData="get video links"/>
+		</BoxPane>
+		<ScrollPane preferredHeight="145"
+                    horizontalScrollBarPolicy="fill"
+                    verticalScrollBarPolicy="fill_to_capacity">
+			<ListView bxml:id="result"/>
+		</ScrollPane>
+	</BoxPane>
+</Window>
+
